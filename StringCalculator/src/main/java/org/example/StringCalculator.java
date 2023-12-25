@@ -55,12 +55,7 @@ public class StringCalculator {
 
     private String[] parseString(String input){
         Input inputType = inputDeterminer.getInputType(input);
-
-        if (inputType == null){
-            System.out.println("올바른 입력을 해주세요.");
-            throw new RuntimeException();
-        }
-
+        
         return inputType.getInput().split(
                 inputType.getDelimiter()
         );
