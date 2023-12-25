@@ -1,7 +1,9 @@
 package org.example;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class InputDeterminer {
     private final List<InputStrategy> inputStrategies;
@@ -10,11 +12,11 @@ public class InputDeterminer {
         this.inputStrategies = inputStrategies;
     }
 
-    public String getInputType(String input){
+    public Input getInputType(String input){
 
         for (InputStrategy inputStrategy : inputStrategies) {
             if(inputStrategy.isType(input))
-                return inputStrategy.getDelimiter();
+                return new Input(inputStrategy.getDelimiter(), inputStrategy.getInput());
         }
         return null;
     }

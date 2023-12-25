@@ -46,19 +46,6 @@ class InputDeterminerTest {
 
     }
 
-    @Test
-    void 커스텀구분자이지만다른구분자에러테스트(){
-        String input = "//;\n1!2!3!";
-    }
 
-    @Test
-    void 구분자정의가없지만커스텀구분자에러테스트(){
-        String input = "1;2;3;";
-    }
-
-    @Test
-    void 여러구분자혼용된에러테스트(){
-        String input = "//;\n1!2;3!";
-    }
 
 }
