@@ -21,7 +21,9 @@ public class StringCalculator {
     }
 
     public int add(String input){
-        isEmpty(input);
+        if(isEmpty(input))
+            return 0;
+
         List<Integer> numbers = parse(input);
         int sum = sum(numbers);
         System.out.println("sum = " + sum);
