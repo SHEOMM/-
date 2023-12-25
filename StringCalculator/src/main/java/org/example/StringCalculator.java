@@ -55,7 +55,7 @@ public class StringCalculator {
 
     private String[] parseString(String input){
         Input inputType = inputDeterminer.getInputType(input);
-        
+
         return inputType.getInput().split(
                 inputType.getDelimiter()
         );
