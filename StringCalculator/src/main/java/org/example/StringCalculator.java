@@ -21,16 +21,25 @@ public class StringCalculator {
     }
 
     public int add(String input){
-        if (input == null || input.isEmpty()){
-            return 0;
-        }
-
+        isEmpty(input);
         List<Integer> numbers = parse(input);
+        int sum = sum(numbers);
+        System.out.println("sum = " + sum);
+        return sum;
+    }
+
+    private boolean isEmpty(String input){
+        if (input == null || input.isEmpty())
+            return true;
+
+        return false;
+    }
+
+    private int sum(List<Integer> numbers){
         int sum = 0;
         for (Integer number : numbers) {
             sum += number;
         }
-        System.out.println("sum = " + sum);
         return sum;
     }
 
@@ -56,8 +65,6 @@ public class StringCalculator {
                 inputType.getDelimiter()
         );
     }
-
-
 
     private int parseInt(String number){
         int num = Integer.parseInt(number);
