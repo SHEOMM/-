@@ -32,6 +32,7 @@ class InputDeterminerTest {
 
     }
 
+
     @Test
     void 콤마패턴매치테스트(){
         String input = "1,2,3";

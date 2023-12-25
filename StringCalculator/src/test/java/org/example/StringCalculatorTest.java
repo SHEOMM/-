@@ -37,7 +37,17 @@ class StringCalculatorTest {
     void 음수에러테스트(){
         String input = "-1:-2:-3:";
         Assertions.assertThrows(RuntimeException.class, () -> stringCalculator.add(input));
+    }
 
+    @Test
+    void Null테스트(){
+        String input = null;
+        Assertions.assertEquals(0, stringCalculator.add(input));
+    }
+
+    void 빈문자열테스트(){
+        String input = "";
+        Assertions.assertEquals(0, stringCalculator.add(input));
     }
 
     @Test

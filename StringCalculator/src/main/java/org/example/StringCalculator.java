@@ -21,6 +21,10 @@ public class StringCalculator {
     }
 
     public int add(String input){
+        if (input == null || input.isEmpty()){
+            return 0;
+        }
+
         List<Integer> numbers = parse(input);
         int sum = 0;
         for (Integer number : numbers) {
