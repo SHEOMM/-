@@ -1,7 +1,11 @@
 package servlet.request;
 
 import controller.Controller;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import servlet.request.header.RequestHeader;
 import servlet.request.header.enums.Method;
 import servlet.response.header.ResponseHeader;
@@ -31,6 +35,19 @@ public class HandlerMapping {
         if(requestHeader.getUrl().equals("/user/create") && requestHeader.getMethod() == Method.POST){
             ResponseHeader responseHeader = new ResponseHeader(out);
             controller.SignUpPost(requestHeader, responseHeader);
+        }
+        if(requestHeader.getUrl().endsWith(".css")){
+            DataOutputStream dos = new DataOutputStream(out);
+            try{
+                byte[] body = Files.readAllBytes(new File("./webapp" + requestHeader.getUrl()).toPath());
+                ResponseHeader responseHeader = new ResponseHeader(out);
+                responseHeader.responseCssHeader(dos, body.length);
+                responseHeader.responseBody(dos, body);
+            }
+            catch (IOException e){
+                System.out.println(e.getMessage());
+            }
+
         }
     }
 }

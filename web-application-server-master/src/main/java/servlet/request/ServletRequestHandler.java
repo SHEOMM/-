@@ -2,11 +2,13 @@ package servlet.request;
 
 import controller.Controller;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -41,10 +43,9 @@ public class ServletRequestHandler extends Thread implements RequestHandler {
 
             Map<String, List<String>> headers = requestHeaderParser.parse(in);
             RequestHeader requestHeader = requestHeaderMapper.map(headers);
-
             handlerMapping.handlerMapping(requestHeader, out);
-
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
+            handlerMapping.handlerMapping(requestHeader, out);
+            
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
@@ -64,6 +65,8 @@ public class ServletRequestHandler extends Thread implements RequestHandler {
             log.error(e.getMessage());
         }
     }
+
+
 
     private void responseBody(DataOutputStream dos, byte[] body) {
         try {
