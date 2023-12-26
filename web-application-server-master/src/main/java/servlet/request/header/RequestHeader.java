@@ -12,18 +12,62 @@ public class RequestHeader {
 
     private String connection;
 
-    private String referer;
+    private String host;
 
     private Map<String, List<String>> headers;
 
-    public RequestHeader(Method method, List<String> cookie, List<String> accept, String connection, String referer,
-                         Map<String, List<String>> headers) {
+    private String url;
+
+    public RequestHeader(Method method, List<String> cookie, List<String> accept, String connection, String host,
+                         Map<String, List<String>> headers, String url) {
         this.method = method;
         this.cookie = cookie;
         this.accept = accept;
         this.connection = connection;
-        this.referer = referer;
+        this.host = host;
         this.headers = headers;
+        this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestHeader{" +
+                "method=" + method +
+                ", cookie=" + cookie +
+                ", accept=" + accept +
+                ", connection='" + connection + '\'' +
+                ", host='" + host + '\'' +
+                ", headers=" + headers +
+                ", url='" + url + '\'' +
+                '}';
+    }
+
+    public Method getMethod() {
+        return method;
+    }
+
+    public List<String> getCookie() {
+        return cookie;
+    }
+
+    public List<String> getAccept() {
+        return accept;
+    }
+
+    public String getConnection() {
+        return connection;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public Map<String, List<String>> getHeaders() {
+        return headers;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     static public class Builder{
@@ -34,7 +78,9 @@ public class RequestHeader {
 
         private String connection;
 
-        private String referer;
+        private String host;
+
+        private String url;
 
         private Map<String, List<String>> headers;
 
@@ -43,11 +89,16 @@ public class RequestHeader {
             this.cookie = requestHeader.cookie;
             this.accept = requestHeader.accept;
             this.connection = requestHeader.connection;
-            this.referer = requestHeader.referer;
+            this.host = requestHeader.host;
             this.headers = requestHeader.headers;
+            this.url = requestHeader.url;
         }
-        public Builder setMethod(String method){
-             this.method = Method.valueOf(method);
+
+        public Builder(){
+
+        }
+        public Builder setMethod(Method method){
+             this.method = method;
              return this;
         }
 
@@ -65,8 +116,8 @@ public class RequestHeader {
             this.connection = connection;
             return this;
         }
-        public Builder setReferer(String referer){
-            this.referer = referer;
+        public Builder setHost(String host){
+            this.host = host;
             return this;
         }
 
@@ -75,8 +126,13 @@ public class RequestHeader {
             return this;
         }
 
+        public Builder setUrls(String url){
+            this.url = url;
+            return this;
+        }
+
         public RequestHeader build(){
-            return new RequestHeader(method, cookie, accept, connection, referer, headers);
+            return new RequestHeader(method, cookie, accept, connection, host, headers, url);
         }
     }
 }

@@ -10,17 +10,21 @@ import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import servlet.request.header.RequestHeader;
+import servlet.request.header.RequestHeaderMapper;
 import servlet.request.header.RequestHeaderParser;
 
 public class ServletRequestHandler extends Thread implements RequestHandler {
     private static final Logger log = LoggerFactory.getLogger(ServletRequestHandler.class);
     private RequestHeaderParser requestHeaderParser;
+    private RequestHeaderMapper requestHeaderMapper;
 
     private Socket connection;
 
     public ServletRequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
         this.requestHeaderParser = new RequestHeaderParser();
+        this.requestHeaderMapper = new RequestHeaderMapper();
     }
     
     @Override
@@ -31,6 +35,7 @@ public class ServletRequestHandler extends Thread implements RequestHandler {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
             Map<String, List<String>> headers = requestHeaderParser.parse(in);
+            RequestHeader requestHeader = requestHeaderMapper.map(headers);
 
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             DataOutputStream dos = new DataOutputStream(out);
