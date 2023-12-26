@@ -16,13 +16,13 @@ import util.HtmlReader;
 
 public class Controller {
     public void index(RequestHeader requestHeader, ResponseHeader responseHeader){
-        String responseBody = HtmlReader.readHtml(requestHeader.getUrl());
-        responseHeader.response(responseBody.getBytes(StandardCharsets.UTF_8), StatusCode.OK);
+        byte[] responseBody = HtmlReader.readHtml(requestHeader.getUrl());
+        responseHeader.response(responseBody, StatusCode.OK);
     }
 
     public void signUpPage(RequestHeader requestHeader, ResponseHeader responseHeader){
-        String responseBody = HtmlReader.readHtml(requestHeader.getUrl());
-        responseHeader.response(responseBody.getBytes(StandardCharsets.UTF_8), StatusCode.OK);
+        byte[] responseBody = HtmlReader.readHtml(requestHeader.getUrl());
+        responseHeader.response(responseBody, StatusCode.OK);
     }
 
     public void SignUpGet(RequestHeader requestHeader, ResponseHeader responseHeader){
@@ -44,8 +44,8 @@ public class Controller {
         String email = requestHeader.getPostBody().get("email");
         User user = new User(userId, password, name, email);
         DataBase.addUser(user);
-        String responseBody = HtmlReader.readHtml("/index.html");
-        responseHeader.response(responseBody.getBytes(StandardCharsets.UTF_8), StatusCode.FOUND);
+        byte[] responseBody = HtmlReader.readHtml("/index.html");
+        responseHeader.response(responseBody, StatusCode.FOUND);
     }
 
 

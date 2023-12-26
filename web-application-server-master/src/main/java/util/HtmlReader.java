@@ -8,18 +8,11 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 
 public class HtmlReader {
-    private static final String webAppUrls = "C:\\Users\\PC\\Desktop\\portfolio\\banranBook\\web-application-server-master\\webapp";
-    public static String readHtml(String urls){
-        File file = new File(webAppUrls + urls);
-        StringBuilder stringBuilder = new StringBuilder();
-        try(InputStream in = Files.newInputStream(file.toPath())){
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-            String index_html_line;
-            while((index_html_line = bufferedReader.readLine()) !=null){
-                stringBuilder.append(index_html_line);
-            }
-            String html = stringBuilder.toString();
-            return html;
+    private static final String webAppUrls = "./webapp";
+    public static byte[] readHtml(String urls){
+        try{
+            byte[] body = Files.readAllBytes(new File(webAppUrls + urls).toPath());
+            return body;
         }catch (IOException e){
             e.printStackTrace();
         }
