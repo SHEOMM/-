@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import servlet.Parser;
 import servlet.request.ServletRequestHandler;
+import util.IOUtils;
 
 public class RequestHeaderParser implements Parser {
 
@@ -39,13 +40,30 @@ public class RequestHeaderParser implements Parser {
                 }
                 values.addAll(Arrays.asList(parsedHeaders).subList(1, parsedHeaders.length));
                 headers.put(key, values);
+
             } catch (IOException e) {
                 // TODO : handling readLine Parsing Error
                 log.error(e.getMessage());
             }
 
         }
+        String body = null;
+        if(headers.containsKey("POST") && headers.containsKey("Content-Length")){
+            int contentLength = Integer.parseInt(headers.get("Content-Length").get(0));
+            try{
+                 body = IOUtils.readData(bufferedReader, contentLength);
+                 System.out.println("body = " + body);
+
+            }catch (IOException e){
+                log.debug(e.getMessage());
+            }
+        }
+        List<String> bodies = new LinkedList<>();
+        bodies.add(body);
+        headers.put("body", bodies);
 
         return headers;
     }
+
+
 }

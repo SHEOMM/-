@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import servlet.request.header.RequestHeader;
 import servlet.request.header.RequestHeaderMapper;
 import servlet.request.header.RequestHeaderParser;
+import servlet.request.header.enums.Method;
 
 public class ServletRequestHandler extends Thread implements RequestHandler {
     private static final Logger log = LoggerFactory.getLogger(ServletRequestHandler.class);
@@ -40,6 +41,7 @@ public class ServletRequestHandler extends Thread implements RequestHandler {
 
             Map<String, List<String>> headers = requestHeaderParser.parse(in);
             RequestHeader requestHeader = requestHeaderMapper.map(headers);
+
             handlerMapping.handlerMapping(requestHeader, out);
 
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
