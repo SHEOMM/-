@@ -1,5 +1,6 @@
 package servlet.request;
 
+import controller.Controller;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,12 +20,15 @@ public class ServletRequestHandler extends Thread implements RequestHandler {
     private RequestHeaderParser requestHeaderParser;
     private RequestHeaderMapper requestHeaderMapper;
 
+    private HandlerMapping handlerMapping;
+
     private Socket connection;
 
     public ServletRequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
         this.requestHeaderParser = new RequestHeaderParser();
         this.requestHeaderMapper = new RequestHeaderMapper();
+        this.handlerMapping = new HandlerMapping(new Controller());
     }
     
     @Override
@@ -36,6 +40,7 @@ public class ServletRequestHandler extends Thread implements RequestHandler {
 
             Map<String, List<String>> headers = requestHeaderParser.parse(in);
             RequestHeader requestHeader = requestHeaderMapper.map(headers);
+            handlerMapping.handlerMapping(requestHeader, out);
 
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             DataOutputStream dos = new DataOutputStream(out);
