@@ -2,13 +2,10 @@ package servlet.request;
 
 import controller.Controller;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -16,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import servlet.request.header.RequestHeader;
 import servlet.request.header.RequestHeaderMapper;
 import servlet.request.header.RequestHeaderParser;
-import servlet.request.header.enums.Method;
 
 public class ServletRequestHandler extends Thread implements RequestHandler {
     private static final Logger log = LoggerFactory.getLogger(ServletRequestHandler.class);
@@ -45,7 +41,7 @@ public class ServletRequestHandler extends Thread implements RequestHandler {
             RequestHeader requestHeader = requestHeaderMapper.map(headers);
             handlerMapping.handlerMapping(requestHeader, out);
             handlerMapping.handlerMapping(requestHeader, out);
-            
+
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes();
             response200Header(dos, body.length);
