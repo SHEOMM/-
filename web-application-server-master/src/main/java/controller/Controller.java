@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.List;
 import model.User;
 import servlet.request.header.RequestHeader;
 import servlet.response.header.ResponseHeader;
@@ -25,7 +26,7 @@ public class Controller {
         responseHeader.response(responseBody, StatusCode.OK);
     }
 
-    public void SignUpGet(RequestHeader requestHeader, ResponseHeader responseHeader){
+    public void signUpGet(RequestHeader requestHeader, ResponseHeader responseHeader){
         if(requestHeader.getGetBody() == null){
             responseHeader.response("올바른 값을 입력해주세요".getBytes(StandardCharsets.UTF_8), StatusCode.OK);
         }
@@ -37,15 +38,43 @@ public class Controller {
         DataBase.addUser(user);
     }
 
-    public void SignUpPost(RequestHeader requestHeader, ResponseHeader responseHeader){
+    public void signUpPost(RequestHeader requestHeader, ResponseHeader responseHeader){
         String name = requestHeader.getPostBody().get("name");
         String userId = requestHeader.getPostBody().get("userId");
         String password = requestHeader.getPostBody().get("password");
         String email = requestHeader.getPostBody().get("email");
         User user = new User(userId, password, name, email);
         DataBase.addUser(user);
-        byte[] responseBody = HtmlReader.readHtml("/index.html");
-        responseHeader.response(responseBody, StatusCode.FOUND);
+        responseHeader.response(StatusCode.REDIRECT, "/index.html");
+    }
+
+    public void signInGet(RequestHeader requestHeader, ResponseHeader responseHeader){
+        byte[] responseBody = HtmlReader.readHtml(requestHeader.getUrl());
+        responseHeader.response(responseBody, StatusCode.OK);
+    }
+
+    public void signInPost(RequestHeader requestHeader, ResponseHeader responseHeader){
+        String userId = requestHeader.getPostBody().get("userId");
+        String password = requestHeader.getPostBody().get("password");
+        try{
+            User user = DataBase.findUserById(userId);
+            if (user.getPassword().equals(password)){
+                responseHeader.response(StatusCode.REDIRECT, "/index.html", "logined=true");
+            }else{
+                throw new NullPointerException();
+            }
+        }catch (NullPointerException e){
+            byte[] responseBody = HtmlReader.readHtml("/user/login_failed.html");
+            responseHeader.response(responseBody, StatusCode.OK, "logined=false");
+        }
+
+    }
+    public void list(RequestHeader requestHeader, ResponseHeader responseHeader){
+        List<String> cookie = requestHeader.getCookie();
+        if(cookie == null){
+            System.out.println("cookie is null");
+        }
+        System.out.println(cookie);
     }
 
 

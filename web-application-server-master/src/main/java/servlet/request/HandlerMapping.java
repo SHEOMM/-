@@ -20,22 +20,32 @@ public class HandlerMapping {
     public void handlerMapping(RequestHeader requestHeader, OutputStream out){
         System.out.println(requestHeader.getUrl());
         if(requestHeader.getUrl().equals("/index.html")){
-            ResponseHeader responseHeader = new ResponseHeader(out);
-            controller.index(requestHeader, responseHeader);
+            controller.index(requestHeader, new ResponseHeader(out));
         }
         if(requestHeader.getUrl().equals("/user/form.html")){
-            ResponseHeader responseHeader = new ResponseHeader(out);
-            controller.signUpPage(requestHeader, responseHeader);
+            controller.signUpPage(requestHeader, new ResponseHeader(out));
         }
         if(requestHeader.getUrl().equals("/user/create") && requestHeader.getMethod() == Method.GET){
-            ResponseHeader responseHeader = new ResponseHeader(out);
-            controller.SignUpGet(requestHeader, responseHeader);
+            controller.signUpGet(requestHeader, new ResponseHeader(out));
         }
 
         if(requestHeader.getUrl().equals("/user/create") && requestHeader.getMethod() == Method.POST){
-            ResponseHeader responseHeader = new ResponseHeader(out);
-            controller.SignUpPost(requestHeader, responseHeader);
+            controller.signUpPost(requestHeader, new ResponseHeader(out));
         }
+
+        if(requestHeader.getUrl().equals("/user/login.html") && requestHeader.getMethod() == Method.GET){
+            controller.signInGet(requestHeader, new ResponseHeader(out));
+        }
+
+        if(requestHeader.getUrl().equals("/user/login") && requestHeader.getMethod() == Method.POST){
+            controller.signInPost(requestHeader, new ResponseHeader(out));
+        }
+
+        if(requestHeader.getUrl().equals("user/list")){
+            ResponseHeader responseHeader = new ResponseHeader(out);
+            controller.list(requestHeader, responseHeader);
+        }
+
         if(requestHeader.getUrl().endsWith(".css")){
             DataOutputStream dos = new DataOutputStream(out);
             try{

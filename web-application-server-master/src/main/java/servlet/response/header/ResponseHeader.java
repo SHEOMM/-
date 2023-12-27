@@ -11,44 +11,75 @@ import servlet.response.header.enums.StatusCode;
 public class ResponseHeader {
 
     private static final Logger log = LoggerFactory.getLogger(ServletRequestHandler.class);
+
+    private StringBuilder responseHeader;
     public OutputStream outputStream;
 
     public ResponseHeader(OutputStream outputStream) {
         this.outputStream = outputStream;
+        this.responseHeader = new StringBuilder();
     }
 
     public void response(byte[] body, StatusCode statusCode){
-        if (statusCode == StatusCode.OK){
-            DataOutputStream dos = new DataOutputStream(this.outputStream);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-        }
-        else if(statusCode == StatusCode.FOUND){
-            DataOutputStream dos = new DataOutputStream(this.outputStream);
-            response302Header(dos, body.length);
-            responseBody(dos, body);
-        }
-
+        DataOutputStream dos = new DataOutputStream(this.outputStream);
+        setStatusCode(statusCode);
+        setHtmlHeader();
+        setContentLength(body.length);
+        buildResponseHeaders(dos);
+        responseBody(dos, body);
     }
 
-    public void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
+    public void response(StatusCode statusCode, String url){
+        DataOutputStream dos = new DataOutputStream(this.outputStream);
+        setStatusCode(statusCode);
+        setLocations(url);
+        buildResponseHeaders(dos);
     }
 
-    public void response302Header(DataOutputStream dos, int lengthOfBodyContent){
-        try {
-            dos.writeBytes("HTTP/1.1 302 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
+    public void response(byte[] body, StatusCode statusCode, String cookie){
+        DataOutputStream dos = new DataOutputStream(this.outputStream);
+        setStatusCode(statusCode);
+        setCookie(cookie);
+        buildResponseHeaders(dos);
+        responseBody(dos, body);
+    }
+
+    public void response(StatusCode statusCode, String url, String cookie){
+        DataOutputStream dos = new DataOutputStream(this.outputStream);
+        setStatusCode(statusCode);
+        setCookie(cookie);
+        setLocations(url);
+        buildResponseHeaders(dos);
+    }
+
+    public void setStatusCode(StatusCode statusCode){
+        responseHeader.append("HTTP/1.1 ")
+                .append(statusCode.getStatusCode())
+                .append(" ").append(statusCode.name())
+                .append("\r\n");
+    }
+
+    public void setCookie(String cookie){
+        responseHeader.append("Set-Cookie: ").append(cookie).append(" \r\n");
+    }
+
+    public void setHtmlHeader(){
+        responseHeader.append("Content-Type: text/html;charset=utf-8\r\n");
+    }
+
+    public void setContentLength(int length){
+        responseHeader.append("Content-Length: ").append(length).append(" \r\n");
+    }
+
+    public void setLocations(String url){
+        responseHeader.append("Location: ").append(url).append(" \r\n");
+    }
+
+    public void buildResponseHeaders(DataOutputStream dos){
+        String header = responseHeader.append("\r\n").toString();
+        try{
+            dos.writeBytes(header);
+        }catch (IOException e){
             log.error(e.getMessage());
         }
     }
