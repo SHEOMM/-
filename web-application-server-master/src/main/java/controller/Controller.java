@@ -8,7 +8,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import model.User;
 import servlet.request.header.RequestHeader;
 import servlet.response.header.ResponseHeader;
@@ -70,11 +72,24 @@ public class Controller {
 
     }
     public void list(RequestHeader requestHeader, ResponseHeader responseHeader){
-        List<String> cookie = requestHeader.getCookie();
-        if(cookie == null){
-            System.out.println("cookie is null");
+        Map<String, String> cookie = requestHeader.getCookie();
+        if(cookie.isEmpty() || cookie.get("logined").equals("false")){
+            byte[] responseBody = HtmlReader.readHtml("/index.html");
+            responseHeader.response(responseBody, StatusCode.OK);
+            return;
         }
-        System.out.println(cookie);
+        Collection<User> allUsers = DataBase.findAll();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<table>");
+        for(User user : allUsers){
+            stringBuilder.append("<tr>");
+            stringBuilder.append("<td>" + user.getUserId() + "</td>");
+            stringBuilder.append("<td>" + user.getName() + "</td>");
+            stringBuilder.append("<td>" + user.getEmail() + "</td>");
+        }
+        stringBuilder.append("</table>");
+        byte[] responseBody = stringBuilder.toString().getBytes(StandardCharsets.UTF_8);
+        responseHeader.response(responseBody, StatusCode.OK);
     }
 
 

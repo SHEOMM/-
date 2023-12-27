@@ -7,7 +7,7 @@ import servlet.request.header.enums.Method;
 
 public class RequestHeader {
     private Method method;
-    private List<String> cookie;
+    private Map<String, String> cookie;
 
     private List<String> accept;
 
@@ -24,7 +24,7 @@ public class RequestHeader {
 
     private Map<String, String> postBody;
 
-    public RequestHeader(Method method, List<String> cookie, List<String> accept, String connection, String host,
+    public RequestHeader(Method method, Map<String, String> cookie, List<String> accept, String connection, String host,
                          Map<String, List<String>> headers, String url, Map<String, String> getBody,
                          Map<String, String> postBody) {
         this.method = method;
@@ -50,7 +50,7 @@ public class RequestHeader {
         return method;
     }
 
-    public List<String> getCookie() {
+    public Map<String, String> getCookie() {
         return cookie;
     }
 
@@ -89,7 +89,7 @@ public class RequestHeader {
 
     static public class Builder{
         private Method method;
-        private List<String> cookie;
+        private Map<String, String> cookie;
 
         private List<String> accept;
 
@@ -112,8 +112,17 @@ public class RequestHeader {
              return this;
         }
 
-        public Builder setCookie(List<String> cookie){
-            this.cookie = cookie;
+        public Builder setCookie(List<String> cookies){
+            Map<String, String> cookieMap = new HashMap<>();
+            if(cookies != null){
+                for (String s : cookies) {
+                    String[] cookie = s.split("=");
+                    String key = cookie[0];
+                    String value = cookie[1];
+                    cookieMap.put(key, value);
+                }
+            }
+            this.cookie = cookieMap;
             return this;
         }
 

@@ -41,7 +41,7 @@ public class HandlerMapping {
             controller.signInPost(requestHeader, new ResponseHeader(out));
         }
 
-        if(requestHeader.getUrl().equals("user/list")){
+        if(requestHeader.getUrl().equals("/user/list")){
             ResponseHeader responseHeader = new ResponseHeader(out);
             controller.list(requestHeader, responseHeader);
         }
